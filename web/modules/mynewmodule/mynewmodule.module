@@ -1,9 +1,3 @@
 <?php
 
-/**
-*
-* Implements hooks_page_top()
-*/
-function mynewmodule_page_top() {
-    \Drupal::messenger()->addStatus('Hello world from new module!');
-}
+// Intentionally left blank.

@@ -1,0 +1,7 @@
+name: Books
+type: module
+description: 'Custom books overview page with Bootstrap styling.'
+core_version_requirement: '>=10.0'
+package: Custom
+dependencies:
+  - drupal:node

@@ -1,0 +1,24 @@
+.books-page {
+  padding: 1.5rem 0;
+}
+
+.books-page .card-img-top {
+  height: 220px;
+  object-fit: cover;
+}
+
+.books-detail .books-detail-cover {
+  max-height: 640px;
+  object-fit: cover;
+}
+
+.books-detail .books-price {
+  color: #b12704;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.books-detail .books-buy-box {
+  max-width: 360px;
+}
