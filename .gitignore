@@ -1,0 +1,26 @@
+# De basis: negeer vendor en core (worden door Composer beheerd)
+/vendor/
+/web/core/
+/web/modules/contrib/
+/web/themes/contrib/
+/web/profiles/contrib/
+/web/libraries/
+
+# --- DDEV & Lokale instellingen ---
+.ddev/
+/web/sites/*/settings.local.php
+/web/sites/*/services.local.yml
+
+# --- Gebruikersbestanden (Nooit pushen!) ---
+/web/sites/*/files/
+/web/sites/*/private/
+
+# --- Frontend / NPM (Heel belangrijk!) ---
+# Negeer de zware node_modules map in je subtheme
+**/node_modules/
+# Als je npm gebruikt, push je alleen de lock file, niet de gedownloade pakketten
+package-lock.json
+
+# --- OS specifieke rommel ---
+.DS_Store
+Thumbs.db
