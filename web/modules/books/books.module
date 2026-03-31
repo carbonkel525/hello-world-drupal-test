@@ -1,0 +1,40 @@
+<?php
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_node_view().
+ */
+function books_node_view(array &$build, NodeInterface $node, EntityViewDisplayInterface $display, $view_mode): void {
+  if ($node->bundle() !== 'book' || $view_mode !== 'full') {
+    return;
+  }
+
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  if ($route_name !== 'entity.node.canonical') {
+    return;
+  }
+
+  /** @var \Drupal\books\Controller\BooksController $controller */
+  $controller = \Drupal::classResolver()->getInstanceFromDefinition(\Drupal\books\Controller\BooksController::class);
+  $custom_build = $controller->detail($node);
+
+  $hide_title = isset($build['title']) && is_array($build['title']);
+
+  // Preserve existing node render metadata (all # keys).
+  $metadata = [];
+  foreach ($build as $key => $value) {
+    if (str_starts_with((string) $key, '#')) {
+      $metadata[$key] = $value;
+    }
+  }
+
+  $build = $metadata;
+  $build['books_custom_detail'] = $custom_build;
+
+  // Prevent the default title field from rendering above custom layout.
+  if ($hide_title) {
+    $build['title']['#access'] = FALSE;
+  }
+}

@@ -85,7 +85,8 @@ class BooksController extends ControllerBase {
             'title' => $title,
             'author_label' => $this->t('Author: @author', ['@author' => $author]),
             'price_label' => '$' . $price,
-            'details_url' => Url::fromRoute('books.detail', ['node' => $node->id()])->toString(),            'details_label' => $this->t('View details'),
+            'details_url' => $this->nodeAliasUrl($node),
+            'details_label' => $this->t('View details'),
           ],
         ];
       }
@@ -96,13 +97,6 @@ class BooksController extends ControllerBase {
     ];
 
     return $build;
-  }
-
-  /**
-   * Dynamic title callback for the books detail page.
-   */
-  public function detailTitle(NodeInterface $node): string {
-    return $node->label();
   }
 
   /**
@@ -194,6 +188,21 @@ class BooksController extends ControllerBase {
     }
 
     return '';
+  }
+
+  /**
+   * Returns the best URL for a node, preferring its alias.
+   */
+  protected function nodeAliasUrl(NodeInterface $node): string {
+    $system_path = '/node/' . $node->id();
+    $language = $node->language()->getId();
+    $alias = \Drupal::service('path_alias.manager')->getAliasByPath($system_path, $language);
+
+    if ($alias && $alias !== $system_path) {
+      return $alias;
+    }
+
+    return $system_path;
   }
 
 }

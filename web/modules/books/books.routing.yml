@@ -5,12 +5,3 @@ books.overview:
     _title: 'Books'
   requirements:
     _permission: 'access content'
-
-books.detail:
-  path: '/books2/{node}'
-  defaults:
-    _controller: '\Drupal\books\Controller\BooksController::detail'
-    _title_callback: '\Drupal\books\Controller\BooksController::detailTitle'
-  requirements:
-    _entity_access: 'node.view'
-    node: '\d+'
