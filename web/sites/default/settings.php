@@ -897,3 +897,19 @@ if (getenv('IS_DDEV_PROJECT') == 'true' && file_exists(__DIR__ . '/settings.ddev
 # if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
+
+$databases['default']['default'] = [
+  'driver' => 'pgsql',
+  'database' => getenv('SERVICE_DATABASE_NAME') ?: 'drupal', // De naam die je in Coolify kiest
+  'username' => getenv('SERVICE_DATABASE_USERNAME') ?: 'drupal',
+  'password' => getenv('SERVICE_DATABASE_PASSWORD') ?: 'password',
+  'host' => getenv('SERVICE_DATABASE_HOST') ?: 'localhost',
+  'port' => getenv('SERVICE_DATABASE_PORT') ?: '5432',
+  'prefix' => '',
+  'namespace' => 'Drupal\\pgsql\\Driver\\Database\\pgsql',
+];
+
+/**
+ * Configuration sync directory.
+ */
+$settings['config_sync_directory'] = '../config/sync';
