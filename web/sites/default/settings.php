@@ -913,3 +913,10 @@ $databases['default']['default'] = [
  * Configuration sync directory.
  */
 $settings['config_sync_directory'] = '../config/sync';
+
+$settings['hash_salt'] = 'c1I/+OGhKW5d3X/vmDN9r70a25Cbb3qSHPkPtKedwIA=';
+
+// Nu we toch bezig zijn, zorg dat Drupal je domein vertrouwt
+$settings['trusted_host_patterns'] = [
+  '^drupaltest\.carbonkel525\.com$',
+];
