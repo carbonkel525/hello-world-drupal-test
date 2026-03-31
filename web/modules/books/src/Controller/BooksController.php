@@ -74,11 +74,7 @@ class BooksController extends ControllerBase {
         $title = $node->label();
         $author = $node->hasField('field_author') && !$node->get('field_author')->isEmpty() ? $node->get('field_author')->value : 'Unknown author';
         $price = $node->hasField('field_price') && !$node->get('field_price')->isEmpty() ? $node->get('field_price')->value : 'N/A';
-        $image_url = '';
-
-        if ($node->hasField('field_cover') && !$node->get('field_cover')->isEmpty() && $node->get('field_cover')->entity) {
-          $image_url = $node->get('field_cover')->entity->createFileUrl();
-        }
+        $image_url = $this->resolveImageUrl($node);
 
         $build['book_' . $node->id()] = [
           '#type' => 'inline_template',
@@ -131,11 +127,7 @@ class BooksController extends ControllerBase {
     $description = $node->hasField('field_description') && !$node->get('field_description')->isEmpty()
       ? $node->get('field_description')->value
       : (string) $this->t('No description available yet.');
-    $image_url = '';
-
-    if ($node->hasField('field_cover') && !$node->get('field_cover')->isEmpty() && $node->get('field_cover')->entity) {
-      $image_url = $node->get('field_cover')->entity->createFileUrl();
-    }
+    $image_url = $this->resolveImageUrl($node);
 
     $stock_label = $stock === NULL
       ? (string) $this->t('Stock unknown')
@@ -165,6 +157,44 @@ class BooksController extends ControllerBase {
         'back_label' => $this->t('Back to books'),
       ],
     ];
+  }
+
+  /**
+   * Resolves an image URL from common book cover field names.
+   */
+  protected function resolveImageUrl(NodeInterface $node): string {
+    $image_field_names = [
+      'field_cover',
+      'field_cover_image',
+      'field_image',
+      'field_book_cover',
+    ];
+
+    foreach ($image_field_names as $field_name) {
+      if (!$node->hasField($field_name) || $node->get($field_name)->isEmpty()) {
+        continue;
+      }
+
+      $entity = $node->get($field_name)->entity;
+      if (!$entity) {
+        continue;
+      }
+
+      // Direct image/file field on node.
+      if (method_exists($entity, 'createFileUrl')) {
+        return $entity->createFileUrl();
+      }
+
+      // Media reference field on node.
+      if (method_exists($entity, 'hasField') && $entity->hasField('field_media_image')) {
+        $media_image = $entity->get('field_media_image');
+        if (!$media_image->isEmpty() && $media_image->entity && method_exists($media_image->entity, 'createFileUrl')) {
+          return $media_image->entity->createFileUrl();
+        }
+      }
+    }
+
+    return '';
   }
 
 }
