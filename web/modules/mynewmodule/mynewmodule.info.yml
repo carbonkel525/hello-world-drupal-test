@@ -1,0 +1,6 @@
+name: My Module
+type: module
+description: "A custom module for Drupal."
+core_version_requirement: ">=10.0"
+dependencies:
+  - drupal:contact
