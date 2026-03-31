@@ -1,0 +1,29 @@
+uuid: 9f7a107b-b30d-45d3-bd33-9910193ec3dc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.services.field_marketing_headline
+    - node.type.services
+  module:
+    - user
+id: node.services.default
+targetEntityType: node
+bundle: services
+mode: default
+content:
+  field_marketing_headline:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  langcode: true

@@ -900,14 +900,29 @@ if (getenv('IS_DDEV_PROJECT') == 'true' && file_exists(__DIR__ . '/settings.ddev
 
 $databases['default']['default'] = [
   'driver' => 'pgsql',
-  'database' => getenv('SERVICE_DATABASE_NAME') ?: 'drupal', // De naam die je in Coolify kiest
-  'username' => getenv('SERVICE_DATABASE_USERNAME') ?: 'drupal',
+  'database' => getenv('SERVICE_DATABASE_NAME') ?: 'postgres',
+  'username' => getenv('SERVICE_DATABASE_USERNAME') ?: 'postgres',
   'password' => getenv('SERVICE_DATABASE_PASSWORD') ?: 'password',
   'host' => getenv('SERVICE_DATABASE_HOST') ?: 'localhost',
   'port' => getenv('SERVICE_DATABASE_PORT') ?: '5432',
   'prefix' => '',
   'namespace' => 'Drupal\\pgsql\\Driver\\Database\\pgsql',
 ];
+
+// 2. OVERRIDE voor LOKAAL (MySQL op DDEV)
+if (getenv('IS_DDEV_PROJECT') == 'true') {
+  $databases['default']['default'] = [
+    'driver' => 'mysql',
+    'database' => 'db',
+    'username' => 'db',
+    'password' => 'db',
+    'host' => 'db',
+    'port' => '3306',
+    'prefix' => '',
+    'collation' => 'utf8mb4_general_ci',
+    'namespace' => 'Drupal\\mysql\\Driver\\Database\\mysql',
+  ];
+}
 
 /**
  * Configuration sync directory.
@@ -918,5 +933,10 @@ $settings['hash_salt'] = 'c1I/+OGhKW5d3X/vmDN9r70a25Cbb3qSHPkPtKedwIA=';
 
 // Nu we toch bezig zijn, zorg dat Drupal je domein vertrouwt
 $settings['trusted_host_patterns'] = [
-  '^drupaltest\.carbonkel525\.com$',
+  '^drupaltest\.carbonkel525\.com$',    // Live VPS
+  '^.*\.ddev\.site$',                   // Standaard DDEV
+  '^localhost$',                        // Localhost
+  '^127\.0\.0\.1$',                     // Direct IP (IPv4)
+  '^127\.0\.0\.1:\d+$',                 // Direct IP met willekeurig poortnummer
+  '^::1$',                              // Direct IP (IPv6)
 ];

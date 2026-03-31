@@ -1,0 +1,64 @@
+uuid: 829e9c52-e2e9-420e-8ea7-a5dde99e21ab
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.article
+  module:
+    - content_moderation
+id: approval_workflow
+label: 'Approval workflow'
+type: content_moderation
+type_settings:
+  states:
+    approval:
+      label: Approval
+      weight: 0
+      published: false
+      default_revision: false
+    draft:
+      label: Draft
+      weight: -2
+      published: false
+      default_revision: false
+    published:
+      label: Published
+      weight: 1
+      published: true
+      default_revision: true
+    review:
+      label: Review
+      weight: -1
+      published: false
+      default_revision: false
+  transitions:
+    create_new_draft:
+      label: 'Create New Draft'
+      from:
+        - draft
+        - published
+      to: draft
+      weight: 0
+    needs_approval:
+      label: 'Needs approval'
+      from:
+        - review
+      to: approval
+      weight: 3
+    publish:
+      label: Publish
+      from:
+        - approval
+        - published
+      to: published
+      weight: 1
+    ready_for_review:
+      label: 'Ready for review'
+      from:
+        - draft
+      to: review
+      weight: 2
+  entity_types:
+    node:
+      - article
+  default_moderation_state: draft
