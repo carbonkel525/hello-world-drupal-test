@@ -85,8 +85,7 @@ class BooksController extends ControllerBase {
             'title' => $title,
             'author_label' => $this->t('Author: @author', ['@author' => $author]),
             'price_label' => '$' . $price,
-            'details_url' => Url::fromRoute('books.detail', ['node' => $node->id()])->toString(),
-            'details_label' => $this->t('View details'),
+            'details_url' => Url::fromRoute('books.detail', ['node' => $node->id()])->toString(),            'details_label' => $this->t('View details'),
           ],
         ];
       }
