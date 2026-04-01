@@ -1,4 +1,12 @@
 services:
+  logger.channel.todo:
+    parent: logger.channel_base
+    arguments: ['todo']
   todo.manager:
     class: Drupal\todo\Service\TodoManager
-    arguments: ['@entity_type.manager', '@current_user']
+    arguments: ['@entity_type.manager', '@current_user', '@logger.channel.todo']
+  todo.request_subscriber:
+    class: Drupal\todo\EventSubscriber\TodoRequestSubscriber
+    arguments: ['@logger.channel.todo']
+    tags:
+      - { name: event_subscriber }
