@@ -1,0 +1,14 @@
+hi_world.overview:
+  path: '/hi-world'
+  defaults:
+    _controller: '\Drupal\hi_world\Controller\HiWorldController::overview'
+    _title: 'Hi World'
+  requirements:
+    _permission: 'access content'
+hi_world.show_the_world:
+  path: '/hi-world/show-the-world'
+  defaults:
+    _title: 'Show The World'
+    _controller: '\Drupal\hi_world\Controller\HiWorldController::__invoke'
+  requirements:
+    _permission: 'access content'

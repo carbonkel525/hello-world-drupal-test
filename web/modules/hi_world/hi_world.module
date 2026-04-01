@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for hi-world module.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function hi_world_theme($existing, $type, $theme, $path): array {
+  return [
+    'hi_world_show_the_world' => [
+      'variables' => [
+        'form' => NULL,
+        'explore_form' => NULL,
+      ],
+      'template' => 'hi-world-show-the-world',
+    ],
+    'explore_the_world' => [
+      'variables' => [
+        'form' => NULL,
+      ],
+      'template' => 'explore-the-world',
+    ],
+  ];
+}

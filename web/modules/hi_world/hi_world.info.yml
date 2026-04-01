@@ -1,0 +1,6 @@
+name: 'hi-world'
+type: module
+description: 'new hello world module to try generate command'
+package: Custom
+core_version_requirement: ^10 || ^11
+ 
