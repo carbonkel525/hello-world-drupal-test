@@ -1,0 +1,7 @@
+todo.overview:
+  path: '/todo'
+  defaults:
+    _title: 'Todo App'
+    _controller: '\Drupal\todo\Controller\TodoController::__invoke'
+  requirements:
+    _permission: 'access content'

@@ -1,0 +1,44 @@
+.todo-page {
+  max-width: 860px;
+  margin: 1.5rem auto;
+}
+
+
+.todo-page .table td,
+.todo-page .table th {
+  vertical-align: middle;
+}
+
+.todo-page .todo-done {
+  text-decoration: line-through;
+  color: #6c757d;
+}
+
+.todo-page .todo-actions .button {
+  margin-right: .5rem;
+}
+
+/* Drupal core button styles can override Bootstrap outline variants. */
+.todo-page .todo-actions .button.btn.btn-outline-secondary {
+  background-color: transparent;
+  border: 1px solid #6c757d;
+  color: #6c757d;
+}
+
+.todo-page .todo-actions .button.btn.btn-outline-secondary:hover,
+.todo-page .todo-actions .button.btn.btn-outline-secondary:focus {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.todo-page .todo-actions .button.btn.btn-outline-danger {
+  background-color: transparent;
+  border: 1px solid #dc3545;
+  color: #dc3545;
+}
+
+.todo-page .todo-actions .button.btn.btn-outline-danger:hover,
+.todo-page .todo-actions .button.btn.btn-outline-danger:focus {
+  background-color: #dc3545;
+  color: #fff;
+}
