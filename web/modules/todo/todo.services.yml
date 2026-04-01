@@ -1,0 +1,4 @@
+services:
+  todo.manager:
+    class: Drupal\todo\Service\TodoManager
+    arguments: ['@entity_type.manager', '@current_user']

@@ -1,0 +1,41 @@
+<?php
+
+declare(strict_types=1);
+
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\node\Entity\NodeType;
+
+/**
+ * Implements hook_install().
+ */
+function todo_install(): void {
+  if (!NodeType::load('todo_item')) {
+    $type = NodeType::create([
+      'type' => 'todo_item',
+      'name' => 'Todo item',
+      'description' => 'Todo items for the custom todo app.',
+    ]);
+    $type->save();
+  }
+
+  if (!FieldStorageConfig::loadByName('node', 'field_todo_done')) {
+    FieldStorageConfig::create([
+      'field_name' => 'field_todo_done',
+      'entity_type' => 'node',
+      'type' => 'boolean',
+      'cardinality' => 1,
+      'settings' => [],
+    ])->save();
+  }
+
+  if (!FieldConfig::loadByName('node', 'todo_item', 'field_todo_done')) {
+    FieldConfig::create([
+      'field_name' => 'field_todo_done',
+      'entity_type' => 'node',
+      'bundle' => 'todo_item',
+      'label' => 'Done',
+      'required' => FALSE,
+    ])->save();
+  }
+}

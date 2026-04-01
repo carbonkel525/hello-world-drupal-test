@@ -6,6 +6,7 @@ namespace Drupal\todo\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\todo\Service\TodoManager;
 
 /**
  * Todo form with simple session-backed list.
@@ -23,7 +24,12 @@ final class TodoForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
-    $todos = $this->getTodos();
+    $todos = $this->todoManager()->getTodos();
+
+    $form['#attached']['library'][] = 'todo/bootstrap';
+    $form['#attached']['library'][] = 'todo/todo-ui';
+    $form['#prefix'] = '<div class="todo-page container"><p class="todo-intro">' . $this->t('Add, complete, and remove your todos below.') . '</p>';
+    $form['#suffix'] = '</div>';
 
     $form['todo_container'] = [
       '#type' => 'container',
@@ -117,13 +123,7 @@ final class TodoForm extends FormBase {
       return;
     }
 
-    $todos = $this->getTodos();
-    $id = (string) (time() . random_int(100, 999));
-    $todos[$id] = [
-      'task' => $task,
-      'done' => FALSE,
-    ];
-    $this->setTodos($todos);
+    $this->todoManager()->addTodo($task);
 
     // Clear the textfield value after successful submit.
     $form_state->setValue('new_item', '');
@@ -141,15 +141,13 @@ final class TodoForm extends FormBase {
    */
   public function toggleTodoSubmit(array &$form, FormStateInterface $form_state): void {
     $trigger = $form_state->getTriggeringElement();
-    $id = (string) ($trigger['#todo_id'] ?? '');
+    $id = (int) ($trigger['#todo_id'] ?? 0);
     $target_state = !empty($trigger['#todo_target_state']);
-    $todos = $this->getTodos();
-    if (!isset($todos[$id])) {
+    if ($id <= 0) {
       return;
     }
 
-    $todos[$id]['done'] = $target_state;
-    $this->setTodos($todos);
+    $this->todoManager()->setDone($id, $target_state);
     $form_state->setRebuild(TRUE);
     $this->redirectIfNotAjax($form_state);
   }
@@ -159,14 +157,12 @@ final class TodoForm extends FormBase {
    */
   public function deleteTodoSubmit(array &$form, FormStateInterface $form_state): void {
     $trigger = $form_state->getTriggeringElement();
-    $id = (string) ($trigger['#todo_id'] ?? '');
-    $todos = $this->getTodos();
-    if (!isset($todos[$id])) {
+    $id = (int) ($trigger['#todo_id'] ?? 0);
+    if ($id <= 0) {
       return;
     }
 
-    unset($todos[$id]);
-    $this->setTodos($todos);
+    $this->todoManager()->delete($id);
     $form_state->setRebuild(TRUE);
     $this->messenger()->addStatus($this->t('Todo removed.'));
     $this->redirectIfNotAjax($form_state);
@@ -185,27 +181,21 @@ final class TodoForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state): void {}
 
   /**
-   * Gets todos from session.
-   */
-  private function getTodos(): array {
-    $todos = $this->getRequest()->getSession()->get('todo.items', []);
-    return is_array($todos) ? $todos : [];
-  }
-
-  /**
-   * Persists todos in session.
-   */
-  private function setTodos(array $todos): void {
-    $this->getRequest()->getSession()->set('todo.items', $todos);
-  }
-
-  /**
    * Applies Post-Redirect-Get fallback for non-AJAX submissions.
    */
   private function redirectIfNotAjax(FormStateInterface $form_state): void {
     if (!$this->getRequest()->isXmlHttpRequest()) {
       $form_state->setRedirect('todo.overview');
     }
+  }
+
+  /**
+   * Returns the todo manager service.
+   */
+  private function todoManager(): TodoManager {
+    /** @var \Drupal\todo\Service\TodoManager $manager */
+    $manager = \Drupal::service('todo.manager');
+    return $manager;
   }
 
 }
